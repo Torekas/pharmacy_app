@@ -1,0 +1,1386 @@
+{
+	"info": {
+		"_postman_id": "124f224c-8293-4f10-b29d-03226f365cdf",
+		"name": "Pharmacy_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33517551"
+	},
+	"item": [
+		{
+			"name": "get_products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Category is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(product) {\r",
+							"    pm.expect(product.category).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Category should not be empty\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Content-Type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"// Test for response time\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"var template = `\r",
+							"<canvas id=\"myChart\" height=\"75\"></canvas>\r",
+							"\r",
+							"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script> \r",
+							"\r",
+							"<script>\r",
+							"    var ctx = document.getElementById(\"myChart\");\r",
+							"\r",
+							"    var myChart = new Chart(ctx, {\r",
+							"        type: \"line\",\r",
+							"        data: {\r",
+							"            labels: [],\r",
+							"            datasets: [{\r",
+							"                data: [],\r",
+							"                label: \"Stock\",\r",
+							"                borderColor: \"#3e95cd\",\r",
+							"                fill: false\r",
+							"            }]\r",
+							"        },\r",
+							"        options: {\r",
+							"            title: {\r",
+							"                display: true,\r",
+							"                text: 'Stock Trend'\r",
+							"            },\r",
+							"            scales: {\r",
+							"                xAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Product'\r",
+							"                    }\r",
+							"                }],\r",
+							"                yAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Stock'\r",
+							"                    }\r",
+							"                }]\r",
+							"            }\r",
+							"        }\r",
+							"\r",
+							"    });\r",
+							"\r",
+							"    pm.getData(function (err, value) {\r",
+							"        myChart.data.datasets[0].data = value.response.map(product => product.stock);\r",
+							"        myChart.data.labels = value.response.map(product => product.name);\r",
+							"        myChart.update();\r",
+							"    });\r",
+							"\r",
+							"</script>`;\r",
+							"\r",
+							"function constructVisualizerPayload() {\r",
+							"    var res = pm.response.json();\r",
+							"    \r",
+							"    var visualizerData = res;\r",
+							"    \r",
+							"    return {response: visualizerData};\r",
+							"}\r",
+							"\r",
+							"pm.visualizer.set(template, constructVisualizerPayload());\r",
+							"\r",
+							"pm.test(\"Id is a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(product) {\r",
+							"    pm.expect(product.id).to.be.a('number').and.to.be.at.least(0);\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Description is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    responseData.forEach(function(product) {\r",
+							"        pm.expect(product).to.have.property('description').that.is.a('string').and.not.empty;\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Name is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  responseData.forEach(function(product) {\r",
+							"    pm.expect(product.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Filename is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(product) {\r",
+							"    pm.expect(product.filename).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Filename should not be empty\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a unique identifier for each product\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(product => {\r",
+							"        pm.expect(product.id).to.exist;\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Each product has all the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    \r",
+							"    responseData.forEach(product => {\r",
+							"        pm.expect(product).to.include.all.keys('id', 'name', 'category', 'description', 'filename', 'price', 'stock');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Each product's id is a unique identifier\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(product => {\r",
+							"        pm.expect(product.id).to.exist.and.to.be.a('number');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Filename is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(product) {\r",
+							"        pm.expect(product.filename).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Filename should not be empty\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Description is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(product) {\r",
+							"    pm.expect(product.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+							"  });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Name is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(product) {\r",
+							"        pm.expect(product.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5001/get_products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"get_products"
+					]
+				},
+				"description": "\nThis endpoint makes an HTTP GET request to retrieve a list of products. The response will be in JSON format and will include an array of product objects, each containing the category, description, filename, ID, name, price, and stock information. \n"
+			},
+			"response": []
+		},
+		{
+			"name": "add_to_cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required field 'message'\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.message).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ensure that the response does not contain any sensitive information\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.not.have.any.keys('password', 'creditCardNumber', 'ssn', 'token');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response body should not be empty\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Headers are present in the response\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message format is as expected\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.message).to.be.a('string');\r",
+							"    pm.expect(responseData.message).to.match(/[a-zA-Z0-9]+/);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required field 'message'\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.have.property('message');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message field contains the expected content\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.message).to.exist.and.to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ensure that the response does not contain any sensitive information\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.not.have.any.keys('password', 'ssn', 'creditCardNumber', 'securityCode');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"7\"\r\n}\r\n\r\n// to test add different id ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/add-to-cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"add-to-cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body contains status key with value 'online'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('status');\r",
+							"    pm.expect(jsonData.status).to.equal('online');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5001/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200 for valid product ID\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains product details\", function () {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    pm.expect(responseBody).to.include('name'); // Adjust based on actual HTML content\r",
+							"    // Add more checks as necessary based on the content of your product.html template\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "product_id",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"7\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/product?product_id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"product"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array of categories\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5001/get_categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"get_categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search_by_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is text/html\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"text/html; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains expected product name\", function () {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    pm.expect(responseBody).to.include(\"1\");\r",
+							"    // Replace \"Aspirin\" with the actual product name you're testing\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5001/search?product_id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search_by_name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Content-Type is text/html\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"text/html; charset=utf-8\");\r",
+							"});\r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.be.empty;\r",
+							"});\r",
+							"pm.test(\"Response contains expected product name\", function () {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    pm.expect(responseBody).to.include(\"Aspirin\");\r",
+							"    // Replace \"Aspirin\" with the actual product name you're testing\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5001/search?product_name=Aspirin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "product_name",
+							"value": "Aspirin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Login page content\", function () {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    pm.expect(responseBody).to.include(\"login\"); // Check for a keyword unique to the login page\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "Torekas",
+						"type": "text"
+					},
+					{
+						"key": "password",
+						"value": "scrypt:32768:8:1$wmES8wG8fD8gNLLb$475e82aeb889e42614e93b0be8940d501358b6a99e5a9f4adbe1f27c940e1ab4731a491023745116a3328361f5bbb9a368cc52bd6a0e074e6f339bdfe163e78a",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful login redirects to home\", function () {\r",
+							"    pm.response.to.have.status(200); // Assuming redirect follows to a 200 OK page\r",
+							"    // Optional: Check for specific content on the home page if response follows redirect\r",
+							"});\r",
+							"pm.test(\"Invalid login shows error message\", function () {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    pm.expect(responseBody).to.include(\"Invalid username or password\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "Torekas",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "scrypt:32768:8:1$wmES8wG8fD8gNLLb$475e82aeb889e42614e93b0be8940d501358b6a99e5a9f4adbe1f27c940e1ab4731a491023745116a3328361f5bbb9a368cc52bd6a0e074e6f339bdfe163e78a",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5001/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add({\r",
+							"    key: \"Cookie\",\r",
+							"    value: \"session=\" + pm.environment.get(\"session_cookie\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "session=.eJyrVkpOLCpRsoquVkrLzEnNS8xNVbJSysxNTE8tjokxMI93zM2vyEzOzMnJzIs3NTAoqNDLKkhX0lHKTAGqMwcyoFqQ1CkA1eWC1BQUZSYD5QyN9CwtdZQKSxPzSjJLKoECtbG1AIlvJyk.ZlMlRg.Tz5QpIMRD39JTQT7ltpQHO_Jcas; HttpOnly; Path=/",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/current_user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"current_user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cart contains expected item\", function () {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    pm.expect(responseBody).to.include(\"1\");\r",
+							"    // Replace \"Expected Product Name\" with the actual name you expect to find\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is text/html\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include(\"text/html\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "session=eyJ1c2VybmFtZSI6IlRvcmVrYXMifQ.ZfdsJA.Wd-4nuHObA2csDnk0ITlCQk33Tg; HttpOnly; Path=/",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add-to-cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.have.header('Content-Type', 'application/json');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has a message property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('message');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has a valid message format\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message property is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is within an acceptable range\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "session=eyJ1c2VybmFtZSI6IlRvcmVrYXMifQ.ZfdsJA.Wd-4nuHObA2csDnk0ITlCQk33Tg; HttpOnly; Path=/",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": \"5\",\r\n  \"quantity\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/add-to-cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"add-to-cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 404\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct response message\", function () {\r",
+							"    var responseJson = pm.response.json();\r",
+							"    if (pm.response.code === 200) {\r",
+							"        pm.expect(responseJson.message).to.eql(\"Item changed quantity\");\r",
+							"    } else if (pm.response.code === 404) {\r",
+							"        pm.expect(responseJson.error).to.eql(\"Item not found in cart\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "session=.eJxFjM0KwjAQhF8l7LmUKMRDn8GDdxvC0mxrpPkx2UKl9N1NRfA0A_N9s4EZZywPKtDdNxBcAzyVghNBA7cc7TKwQGvJCo5iwMygd93Atx3O6GYK6Ak6cL5qpe-lMteYkdG6QEZJmdb2maZ66GzFVC0_44-Jk_QHkbIb6nJpVQOvBQM7fkN33vX-AVh5OF4.ZlLv8A.cg4JdmswSLeN0nFBNrT_YDeE-Qk; HttpOnly; Path=/",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": \"5\",\r\n  \"amount\": 2\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/update-cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"update-cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del-item-cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 404\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct response message\", function () {\r",
+							"    var responseJson = pm.response.json();\r",
+							"    if (pm.response.code === 200) {\r",
+							"        pm.expect(responseJson.message).to.eql(\"Item deleted from cart successfully\");\r",
+							"    } else if (pm.response.code === 404) {\r",
+							"        pm.expect(responseJson.error).to.eql(\"Item not found in cart\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "session=.eJxFjM0KwjAQhF8l7LmUKMRDn8GDdxvC0mxrpPkx2UKl9N1NRfA0A_N9s4EZZywPKtDdNxBcAzyVghNBA7cc7TKwQGvJCo5iwMygd93Atx3O6GYK6Ak6cL5qpe-lMteYkdG6QEZJmdb2maZ66GzFVC0_44-Jk_QHkbIb6nJpVQOvBQM7fkN33vX-AVh5OF4.ZlLv8A.cg4JdmswSLeN0nFBNrT_YDeE-Qk; HttpOnly; Path=/",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": \"5\",\r\n  \"quantity\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/del-item-cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"del-item-cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "empty-cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct response message\", function () {\r",
+							"    var responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.be.oneOf([\"Cart emptied successfully\", \"Cart is already empty\"]);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "session=.eJxFjM0KwjAQhF8l7LmUKMRDn8GDdxvC0mxrpPkx2UKl9N1NRfA0A_N9s4EZZywPKtDdNxBcAzyVghNBA7cc7TKwQGvJCo5iwMygd93Atx3O6GYK6Ak6cL5qpe-lMteYkdG6QEZJmdb2maZ66GzFVC0_44-Jk_QHkbIb6nJpVQOvBQM7fkN33vX-AVh5OF4.ZlLv8A.cg4JdmswSLeN0nFBNrT_YDeE-Qk; HttpOnly; Path=/",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/empty-cart?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"empty-cart"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "buy-cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "session=.eJxFjM0KwjAQhF8l7LmUKMRDn8GDdxvC0mxrpPkx2UKl9N1NRfA0A_N9s4EZZywPKtDdNxBcAzyVghNBA7cc7TKwQGvJCo5iwMygd93Atx3O6GYK6Ak6cL5qpe-lMteYkdG6QEZJmdb2maZ66GzFVC0_44-Jk_QHkbIb6nJpVQOvBQM7fkN33vX-AVh5OF4.ZlLv8A.cg4JdmswSLeN0nFBNrT_YDeE-Qk; HttpOnly; Path=/",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5001/api/buy-cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"buy-cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Redirects on successful registration\", function() {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 302]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Registration response validation\", function() {\r",
+							"    var responseBody = pm.response.text();\r",
+							"    var isDuplicate = responseBody.includes(\"Username or Email already exists.\");\r",
+							"    var isSuccess = responseBody.includes(\"success message\") || pm.response.code === 200; // Assuming \"success message\" is part of your successful registration response or a 200 status code is returned.\r",
+							"\r",
+							"    // Expect the test to pass if there's a duplicate user/email message OR registration is successful\r",
+							"    pm.expect(isDuplicate || isSuccess).to.be.true;\r",
+							"\r",
+							"    // Optionally, you can separate the checks to give more detailed feedback:\r",
+							"    if (isDuplicate) {\r",
+							"        pm.expect(isDuplicate).to.be.true;\r",
+							"        console.log(\"Duplicate username/email detected.\");\r",
+							"    } else if (isSuccess) {\r",
+							"        pm.expect(isSuccess).to.be.true;\r",
+							"        console.log(\"Registration successful or user does not already exist.\");\r",
+							"    } else {\r",
+							"        console.log(\"Unexpected response or status code.\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test12",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "piwo12",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "student@piwo12.pl",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5001/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains users\", function() {\r",
+							"    var responseData = pm.response.json();\r",
+							"    pm.expect(Array.isArray(responseData)).to.be.true; // Check if response is an array\r",
+							"\r",
+							"    if(responseData.length > 0) {\r",
+							"        // Check if the first user object has id, username, and email properties\r",
+							"        pm.expect(responseData[0]).to.have.property('id');\r",
+							"        pm.expect(responseData[0]).to.have.property('username');\r",
+							"        pm.expect(responseData[0]).to.have.property('email');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is not empty\", function() {\r",
+							"    var responseData = pm.response.json();\r",
+							"    pm.expect(responseData.length).to.be.above(0); // Check that the response array is not empty\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5001/get_users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"get_users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"All orders have valid usernames or null\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach(function(order) {\r",
+							"        pm.expect(order).to.have.property('username');\r",
+							"        if (order.username !== null) {\r",
+							"            pm.expect(order.username).to.be.a('string');\r",
+							"            pm.expect(order.username).to.not.be.empty;\r",
+							"        }\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"All orders have valid orderData\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach(function(order) {\r",
+							"        pm.expect(order).to.have.property('orderData');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "session=eyJ1c2VybmFtZSI6IlRvcmVrYXMifQ.ZlL6ww.sGTftytp9fuTmYrwwKOKy-Eo78k; HttpOnly; Path=/",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Torekas",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5001/get_orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"get_orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
